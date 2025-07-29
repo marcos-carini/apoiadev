@@ -12,8 +12,6 @@ export default async function Dashboard() {
     redirect("/");
   }
 
-  console.log(session.user)
-
   return (
     <div className="p-4">
       <section className="flex items-center justify-between mb-4">
