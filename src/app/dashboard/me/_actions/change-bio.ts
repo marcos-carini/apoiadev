@@ -3,14 +3,14 @@ import {z} from "zod";
 import {prisma} from "@/lib/prisma";
 import {auth} from "@/lib/auth";
 
-const changeNameSchema = z.object({
-  name: z.string().min(4, "O nome precisa ter pelo menos 4 caracteres").max(30, "O nome deve ter no máximo 30 caracteres"),
+const changeDescriptionSchema = z.object({
+  description: z.string().min(4, "A descrição precisa ter pelo menos 4 caracteres").max(300, "A descrição deve ter no máximo 300 caracteres"),
 });
 
-type ChangeNameSchema = z.infer<typeof changeNameSchema>;
+type ChangeDescriptionSchema = z.infer<typeof changeDescriptionSchema>;
 
 
-export async function changeName(data: ChangeNameSchema) {
+export async function changeDescription(data: ChangeDescriptionSchema) {
 
   const session = await auth();
   const userId = session?.user.id;
@@ -22,7 +22,7 @@ export async function changeName(data: ChangeNameSchema) {
     }
   }
 
-  const schema = changeNameSchema.safeParse(data);
+  const schema = changeDescriptionSchema.safeParse(data);
 
   if (!schema.success) {
     return{
@@ -38,7 +38,7 @@ export async function changeName(data: ChangeNameSchema) {
         id: userId
       },
       data: {
-        name: data.name
+        bio: data.description
       }
     });
 
@@ -50,7 +50,7 @@ export async function changeName(data: ChangeNameSchema) {
   } catch (err) {
     return {
       data: null,
-      error: "Erro ao atualizar o nome"
+      error: "Erro ao atualizar a descrição"
     }
   }
 }
