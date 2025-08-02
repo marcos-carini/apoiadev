@@ -16,8 +16,6 @@ export default async function Dashboard() {
 
   const accountUrl = await getLoginOnboardAccount(session.user.connectedStripeAccountId);
 
-  console.log("## ACCOUNT URL ##", accountUrl);
-
   return (
     <div className="p-4">
       <section className="flex items-center justify-between mb-4">
@@ -38,11 +36,12 @@ export default async function Dashboard() {
         <CreateAccountButton/>
       )}
 
-      <Stats />
-
+      <Stats userId={session.user.id} stripeAccountId={session.user.connectedStripeAccountId ?? ""}/>
 
       <h2 className="text-2xl font-semibold mb-2">Últimas doações</h2>
-      <DonationTable />
+      {session.user.connectedStripeAccountId &&(
+        <DonationTable />
+      )}
     </div>
   );
 }
