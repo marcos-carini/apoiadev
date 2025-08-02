@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { createPayment } from "../_actions/create-payment";
+import { toast } from "sonner";
+import { getStripeJs } from "@/lib/stripe-js";
 
 const formSchema = z.object({
   name: z.string().min(1, "O nome é obrigatório").max(50),
@@ -49,7 +51,32 @@ export default function FormDonate({slug, creatorId}: FormDonateProps) {
       creatorId: creatorId
     });
 
-    console.log(checkout);
+    await handlePaymentResponse(checkout);
+  }
+
+  async function handlePaymentResponse(checkout: {sessionId?: string, error?: string}){
+
+    if (checkout.error) {
+      toast.error(checkout.error);
+      return;
+    }
+
+    if (!checkout.sessionId) {
+      toast.error("Falha ao iniciar o pagamento. Tente novamente mais tarde.");
+      return;
+    }
+
+    const stripe = await getStripeJs();
+
+    if (!stripe) {
+      toast.error("Falha ao carregar o Stripe. Tente novamente mais tarde.");
+      return;
+    }
+
+    await stripe?.redirectToCheckout({
+      sessionId: checkout.sessionId
+    })
+
   }
 
 
@@ -112,7 +139,9 @@ export default function FormDonate({slug, creatorId}: FormDonateProps) {
             </FormItem>
           )}
         />
-        <Button type="submit">Fazer doação</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Carregando..." : "Faze doação"}
+        </Button>
       </form>
     </Form>
   )
