@@ -140,7 +140,7 @@ export default function FormDonate({slug, creatorId}: FormDonateProps) {
           )}
         />
         <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Carregando..." : "Faze doação"}
+          {form.formState.isSubmitting ? "Carregando..." : "Fazer doação"}
         </Button>
       </form>
     </Form>
