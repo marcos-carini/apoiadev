@@ -18,7 +18,8 @@ export default async function Dashboard() {
 
   // const accountUrl = await getLoginOnboardAccount(session.user.connectedStripeAccountId);
   const urlStripeDashboard = await getStripeDashboard(session.user?.connectedStripeAccountId);
-  const donates = await getAllDonates(session.user.id);
+
+  //const donates = await getAllDonates(session.user.id);
 
   return (
     <div className="p-4">
@@ -53,7 +54,7 @@ export default async function Dashboard() {
             Últimas doações
           </h2>
           
-          <DonationTable data={donates.data}/>
+          <DonationTable />
         </>
       )}
     </div>
